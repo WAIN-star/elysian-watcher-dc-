@@ -1,0 +1,22 @@
+name: Test ServerChan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-serverchan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test ServerChan notification
+        env:
+          K: ${{ secrets.SERVERCHAN_SENDKEY }}
+        run: |
+          if [ -z "$K" ]; then
+            echo "SERVERCHAN_SENDKEY is empty"
+            exit 1
+          fi
+          response=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "title=测试推送" -d "desp=Server酱连通测试" "https://sctapi.ftqq.com/$K.send")
+          echo "$response"
+          if echo "$response" | grep -q "errno"; then
+            exit 1
+          fi
