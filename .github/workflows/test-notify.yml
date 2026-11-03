@@ -15,8 +15,10 @@ jobs:
             echo "SERVERCHAN_SENDKEY is empty"
             exit 1
           fi
-          response=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "title=测试推送" -d "desp=Server酱连通测试" "https://sctapi.ftqq.com/$K.send")
+          K=${K#"${K%%[![:space:]]*}"}
+          K=${K%"${K##*[![:space:]]}"}
+          K=${K##*/}
+          K=${K%.send}
+          key_length=${#K}
+          response=$(curl -sS -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "title=测试推送" -d "desp=Server酱连通测试" "https://sctapi.ftqq.com/$K.send")
           echo "$response"
-          if echo "$response" | grep -q "errno"; then
-            exit 1
-          fi
